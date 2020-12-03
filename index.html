@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+      :root {
+
+      }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  <h2>Movies Gallery</h2>
+  <div class="movie-list">
+    <movie-list-controls></movie-list-controls>
+    <div id="movie-item-container"></div>
+  </div>
+  <fav-list/>
+</div>
+<script src="movies.js"></script>
+<script src="util.js"></script>
+<script src="App.js"></script>
+<script src="components/MovieItem.js"></script>
+<script src="components/FavList.js"></script>
+<script src="components/MovieListControls.js"></script>
+<script>
+  const App = getApp();
+  customElements.define('movie-item', MovieItem);
+  customElements.define('fav-list', FavList);
+  customElements.define('movie-list-controls', MovieListControls);
+  document.addEventListener('DOMContentLoaded', () => {
+    App.setMovieList(movieList);
+  });
+</script>
+</body>
+</html>
