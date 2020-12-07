@@ -42,3 +42,9 @@ function createPubSub() {
 }
 
 const PubSub = createPubSub();
+
+function removeBySelector(node, selector) {
+  for (let node2 of (node.querySelectorAll(selector) || [])) {
+    node2.remove();
+  }
+}

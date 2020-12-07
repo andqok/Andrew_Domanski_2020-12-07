@@ -5,10 +5,32 @@ class FavList extends HTMLElement {
     this.attachShadow({ mode: 'open' });
   }
   render() {
-    this.shadowRoot.innerHTML = `<div>
+    this.shadowRoot.innerHTML = `
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      h2 {
+        line-height: 5rem;
+      }
+      ul {
+        list-style-type: none;
+      }
+      button {
+        display: inline-block;
+        padding: 4px;
+      }
+    </style>
+    <div>
+      <h2>Favorite List</h2>
       <ul id="myul"></ul>
       <template id="me">
-        <li><button>X</button></li>
+        <li>
+          <span></span>
+          <button class="unfav">X</button>
+        </li>
       </template>
     </div>`
   }
@@ -19,7 +41,6 @@ class FavList extends HTMLElement {
   }
   disconnectedCallback() {
     this.shadowRoot.addEventListener('click', this.onUnfav);
-    PubSub.unsubscribe(EventType.FAV_MUTATION, this.onFavMutation);
   }
   onFavMutation = () => {
     this.shadowRoot.querySelector('#myul').innerHTML = ''
@@ -28,7 +49,7 @@ class FavList extends HTMLElement {
       const instance = document.importNode(
         this.shadowRoot.getElementById('me').content, true);
       const data = App.state.movieList.find((mov) => mov.id === id);
-      instance.firstChild.textContent = data.name
+      instance.querySelector('span').textContent = data.name;
       instance.querySelector('button').dataset.id = id;
       this.shadowRoot.querySelector('#myul').appendChild(instance);
     }

@@ -1,18 +1,21 @@
 const EventType = {
   FAV_MUTATION: 'FAV_MUTATION',
-  GENRES_MUTATION: 'GENRES_MUTATION',
-  SELECT_GENRE: 'SELECT_GENRE'
-}
+  SET_GENRE_LIST: 'SET_GENRE_LIST',
+  SELECT_GENRE: 'SELECT_GENRE',
+  SWITCH_MOVIE_MODAL: 'SWITCH_MOVIE_MODAL',
+  SWITCH_VIEW_TYPE: 'SWITCH_VIEW_TYPE',
+};
+
 const ViewType = {
   CARD: 'card',
   LIST: 'list',
-}
+};
 
 function getApp() {
   let movieList = [],
       favMovies = [],
       genres = [],
-      viewType = ViewType.CARD,
+      viewType = ViewType.LIST,
       movieModal,
       selectedGenre;
   try {
@@ -41,20 +44,22 @@ function getApp() {
     setMovieList(newMovieList) {
       movieList = newMovieList;
       for (let movieData of movieList) {
-        const movie = document.createElement('movie-item')
+        const movie = document.createElement('movie-item');
         el('#movie-item-container').appendChild(movie);
         movie.setAttribute('mid', movieData.id);
-        movie.setAttribute('appearance', viewType);
 
         movieData.genres.forEach((newGenre) => {
           const existingGenre = genres.find((oldGenre) => {
-            return oldGenre.toLowerCase() === newGenre.toLowerCase()
+            return oldGenre.toLowerCase() === newGenre.toLowerCase();
           })
           if (!existingGenre) genres.push(newGenre);
         });
       }
-      PubSub.publish(EventType.GENRES_MUTATION)
+      PubSub.publish(EventType.SET_GENRE_LIST);
       PubSub.publish(EventType.FAV_MUTATION);
+      PubSub.publish(EventType.SWITCH_VIEW_TYPE);
+      PubSub.publish(EventType.SWITCH_MOVIE_MODAL);
+      App.setViewType(ViewType.LIST);
     },
     switchFavStatus(id) {
       if (id && !Number.isNaN(id)) {
@@ -66,12 +71,40 @@ function getApp() {
         PubSub.publish(EventType.FAV_MUTATION);
       }
     },
+    /** Undefined will close modal
+     * @param {number?} id */
     setMovieModal(id) {
       movieModal = id;
+      PubSub.publish(EventType.SWITCH_MOVIE_MODAL);
+    },
+    /** @param {ViewType} type */
+    setViewType(type) {
+      viewType = type;
+      el('#movie-item-container').dataset.appearance = type;
+      PubSub.publish(EventType.SWITCH_VIEW_TYPE);
     },
     setActiveGenre(genre) {
       selectedGenre = genre;
-      PubSub.publish(EventType.SELECT_GENRE);
+      const thisGenreMovies = movieList.filter((movie) => {
+        return movie.genres.map(i => i.toLowerCase()).includes(selectedGenre.toLowerCase());
+      }).map(movie => movie.id);
+      const alreadyCreated = [];
+      for (let movieNode of (document.querySelectorAll('movie-item') || [])) {
+        const id = parseInt(movieNode.getAttribute('mid'))
+        if (thisGenreMovies.includes(id)) {
+          alreadyCreated.push(id);
+        } else {
+          movieNode.remove();
+        }
+      }
+
+      for (let movID of thisGenreMovies) {
+        if (!alreadyCreated.includes(movID)) {
+          const movie = document.createElement('movie-item');
+          el('#movie-item-container').appendChild(movie);
+          movie.setAttribute('mid', movID);
+        }
+      }
     }
   }
 }

@@ -1,0 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --card-size: 15rem;
+    --card-gap: 1rem;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font: 16px Arial, sans-serif;
+    background: linear-gradient(30deg, #abc38e, #657fee) fixed;
+}
+
+.app-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 230px;
+}
+
+#movie-item-container {
+    display: grid;
+    grid-gap: 1rem;
+    padding: 1rem;
+}
+
+#movie-item-container[data-appearance="card"] {
+    grid-template-columns: repeat(auto-fill, minmax( calc(var(--card-size) + var(--card-gap)) , 1fr));
+}
