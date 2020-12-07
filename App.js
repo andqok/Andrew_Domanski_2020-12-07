@@ -59,7 +59,7 @@ function getApp() {
       PubSub.publish(EventType.FAV_MUTATION);
       PubSub.publish(EventType.SWITCH_VIEW_TYPE);
       PubSub.publish(EventType.SWITCH_MOVIE_MODAL);
-      App.setViewType(ViewType.LIST);
+      App.setViewType(ViewType.CARD);
     },
     switchFavStatus(id) {
       if (id && !Number.isNaN(id)) {

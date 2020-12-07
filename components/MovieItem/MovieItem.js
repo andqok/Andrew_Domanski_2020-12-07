@@ -32,7 +32,7 @@ class MovieItem extends HTMLElement {
       .movie-item[data-appearance='list'] {
         display: grid;
         grid-template-columns: 250px 1fr;
-        grid-template-rows: 33% 33% 33%;
+        grid-template-rows: 26% 40% 33%;
         grid-template-areas: "img figcaption"
                              "img description"
                              "img genres";
@@ -46,7 +46,7 @@ class MovieItem extends HTMLElement {
       }
       .figure img {
         max-height: 100%;
-        max-width: 100%;
+        max-width: 95%;
         box-shadow: #d6d6d6 0 1px 0 2px;
       }
       .btn-reset {
@@ -94,6 +94,9 @@ class MovieItem extends HTMLElement {
         display: none;
       }
 
+      .movie-item[data-appearance='list'] figure {
+        padding: 0 .5rem;
+      }
       .movie-item[data-appearance='list'] .name {
         font-weight: bold;
       }
@@ -106,6 +109,7 @@ class MovieItem extends HTMLElement {
       }
       .description {
         grid-area: description;
+        line-height: 1.6;
       }
       .genres {
         grid-area: genres;
